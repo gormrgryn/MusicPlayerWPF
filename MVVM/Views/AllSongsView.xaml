@@ -1,0 +1,22 @@
+<UserControl 
+    x:Class="MusicPlayerWPF.MVVM.Views.AllSongsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Local="clr-namespace:MusicPlayerWPF.MVVM.Views"
+    mc:Ignorable="d"
+>
+    <StackPanel
+        Background="Transparent"
+    >
+        <TextBlock
+            Width="250"
+            Height="40"
+            Margin="5"
+            Text="aaaaaaaaaaaaaaaaaaaaaaaaa"
+            Foreground="White"
+            Background="Green"
+        />
+    </StackPanel>
+</UserControl>
