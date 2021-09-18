@@ -10,13 +10,38 @@
     <StackPanel
         Background="Transparent"
     >
-        <TextBlock
-            Width="250"
-            Height="40"
-            Margin="5"
-            Text="aaaaaaaaaaaaaaaaaaaaaaaaa"
-            Foreground="White"
-            Background="Green"
-        />
+        <TextBlock Text="{Binding Text}"/>
+        <ListBox
+            x:Name="AllSongs"
+            ItemsSource="{Binding AllSongs, Mode=OneWay}"
+            HorizontalContentAlignment="Stretch"
+        >
+            <ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid Margin="0,2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<TextBlock
+                            Grid.Column="0"
+                            Text="{Binding Title}"
+                            Foreground="Black"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding Artists}"
+                            Foreground="Black"/>
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="{Binding Album}"
+                            Foreground="Black"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </UserControl>
