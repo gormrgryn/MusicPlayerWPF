@@ -9,15 +9,13 @@
 >
     <StackPanel
         Background="Transparent">
-        <TextBlock Text="{Binding Path=Text, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Command="{Binding Path=PlaySongCommand}">asb</Button>
         <ListBox
             Background="Transparent"
             BorderThickness="0"
-            x:Name="AllSongs"
+            x:Name="AllSongsList"
             ItemsSource="{Binding AllSongs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             HorizontalContentAlignment="Stretch"
-            SelectedItem="{Binding SelectedSong}">
+            SelectedItem="{Binding SelectedItem}">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Height" Value="50"/>
@@ -55,8 +53,9 @@
                             HorizontalAlignment="Center"/>
                         <Button
                             Grid.Column="3"
-                            Command="{Binding PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
-                            CommandParameter="{Binding SelectedSong}">play</Button>
+                            Margin="10"
+                            Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
+                            CommandParameter="{Binding}">play</Button>
                         <TextBlock
                             x:Name="Id"
                             Visibility="Hidden"

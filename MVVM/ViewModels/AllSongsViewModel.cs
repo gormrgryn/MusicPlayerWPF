@@ -15,13 +15,9 @@ namespace MusicPlayerWPF.MVVM.ViewModels
         public AllSongsModel model { get; set; }
         
         private ObservableCollection<SongModel> allsongs;
-
         public ObservableCollection<SongModel> AllSongs
         {
-            get
-            {
-                return allsongs;
-            }
+            get { return allsongs; }
             set
             {
                 allsongs = value;
@@ -29,23 +25,26 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             }
         }
 
-        public string Text { get; set; }
-
         private RelayCommand playSongCommand;
         public RelayCommand PlaySongCommand
         {
-            get { return playSongCommand; }
+            get
+            {
+                return playSongCommand ?? (playSongCommand = new RelayCommand(o =>
+                {
+                    SongModel currentSong = model.CurrentSong;
+                    if (currentSong != null) currentSong.Stop();
+                    
+                    currentSong = o as SongModel;
+                    model.CurrentSong = currentSong;
+                    currentSong.Play();
+                }));
+            }
         }
 
         public AllSongsViewModel()
         {
             model = new AllSongsModel();
-            playSongCommand = new RelayCommand(o =>
-            {
-                AllSongs = null;
-                Text = "asdasadsas";
-            });
-            Text = "blu";
             AllSongs = new ObservableCollection<SongModel>();
             string dirName = Directory.GetDirectories
             (
