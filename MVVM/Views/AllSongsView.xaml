@@ -55,7 +55,20 @@
                             Grid.Column="3"
                             Margin="10"
                             Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
-                            CommandParameter="{Binding}">play</Button>
+                            CommandParameter="{Binding}">
+                            <Image>
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsCurrent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
+                                                <Setter Property="Source" Value="{Binding DataContext.PauseIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Setter Property="Source" Value="{Binding DataContext.PlayIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
                         <TextBlock
                             x:Name="Id"
                             Visibility="Hidden"

@@ -11,6 +11,9 @@ using System.Windows.Input;
 namespace MusicPlayerWPF.MVVM.ViewModels
 {
     public class AllSongsViewModel : ObservableObject {
+        //
+        public string PlayIconUri { get; set; }
+        public string PauseIconUri { get; set; }
 
         public AllSongsModel model { get; set; }
         
@@ -32,12 +35,19 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             {
                 return playSongCommand ?? (playSongCommand = new RelayCommand(o =>
                 {
-                    SongModel currentSong = model.CurrentSong;
-                    if (currentSong != null) currentSong.Stop();
-                    
-                    currentSong = o as SongModel;
-                    model.CurrentSong = currentSong;
-                    currentSong.Play();
+                    // SongModel currentSong = model.CurrentSong;
+                    // if (currentSong != null)
+                    // {
+                    //     currentSong.Stop();
+                    //     currentSong.IsCurrent = false;
+                    // }
+                    // currentSong = o as SongModel;
+                    // currentSong.IsCurrent = true;
+                    // model.CurrentSong = currentSong;
+                    // currentSong.Play();
+                    SongModel song = o as SongModel;
+                    song.IsCurrent = !song.IsCurrent;
+                    // model.CurrentSong = song;
                 }));
             }
         }
@@ -52,7 +62,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 (
                     Directory.GetCurrentDirectory()
                 )[1]
-            )[1];
+            )[2];
 
             if(Directory.Exists(dirName))
             {
@@ -65,6 +75,21 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     AllSongs.Add(song);
                 }
             }
+            PlayIconUri = Directory.GetFiles(Directory.GetDirectories
+            (
+                Directory.GetDirectories
+                (
+                    Directory.GetCurrentDirectory()
+                )[1]
+            )[1])[1];
+
+            PauseIconUri = Directory.GetFiles(Directory.GetDirectories
+            (
+                Directory.GetDirectories
+                (
+                    Directory.GetCurrentDirectory()
+                )[1]
+            )[1])[0];
         }
     }
 }
