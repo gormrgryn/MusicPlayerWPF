@@ -9,6 +9,10 @@
 >
     <StackPanel
         Background="Transparent">
+        <TextBlock
+            Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Foreground="Black"
+            HorizontalAlignment="Center"/>
         <ListBox
             Background="Transparent"
             BorderThickness="0"
@@ -71,7 +75,7 @@
                         </Button>
                         <TextBlock
                             x:Name="Id"
-                            Visibility="Hidden"
+                            Visibility="Visible"
                             Text="{Binding Path=Id}"
                             Foreground="Black"
                             HorizontalAlignment="Center"/>

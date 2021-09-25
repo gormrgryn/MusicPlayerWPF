@@ -15,6 +15,16 @@ namespace MusicPlayerWPF.MVVM.ViewModels
         public string PlayIconUri { get; set; }
         public string PauseIconUri { get; set; }
 
+        private string text;
+        public string Text
+        {
+            get { return text; }
+            set
+            {
+                text = value;
+                OnPropertyChanged("Text");
+            }
+        }
         public AllSongsModel model { get; set; }
         
         private ObservableCollection<SongModel> allsongs;
@@ -35,19 +45,19 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             {
                 return playSongCommand ?? (playSongCommand = new RelayCommand(o =>
                 {
-                    // SongModel currentSong = model.CurrentSong;
-                    // if (currentSong != null)
-                    // {
-                    //     currentSong.Stop();
-                    //     currentSong.IsCurrent = false;
-                    // }
-                    // currentSong = o as SongModel;
-                    // currentSong.IsCurrent = true;
-                    // model.CurrentSong = currentSong;
-                    // currentSong.Play();
-                    SongModel song = o as SongModel;
-                    song.IsCurrent = !song.IsCurrent;
-                    // model.CurrentSong = song;
+                    SongModel currentSong = model.CurrentSong;
+                    SongModel newCurrentSong = o as SongModel;
+
+                    if (currentSong != default(SongModel))
+                    {
+                        currentSong.IsCurrent = false;
+                        currentSong.Stop();
+                    }
+                    model.CurrentSong = newCurrentSong;
+                    newCurrentSong.IsCurrent = true;
+                    newCurrentSong.Play();
+
+                    Text = currentSong?.Title ?? "no";
                 }));
             }
         }
