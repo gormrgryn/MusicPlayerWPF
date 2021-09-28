@@ -30,55 +30,79 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
 				<DataTemplate>
-					<Grid Margin="0,2">
+					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
 						</Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
 							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<TextBlock
+                        <Button
                             Grid.Column="0"
+                            Margin="5"
+                            Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
+                            CommandParameter="{Binding}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            BorderBrush="Transparent">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Setters>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Grid
+                                                        VerticalAlignment="Stretch"
+                                                        HorizontalAlignment="Stretch"
+                                                        Background="{TemplateBinding Background}"
+                                                    >
+                                                        <Image>
+                                                            <Image.Style>
+                                                                <Style TargetType="Image">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding DataContext.IsCurrent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
+                                                                            <Setter Property="Source" Value="{Binding DataContext.PauseIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                    <Setter Property="Source" Value="{Binding DataContext.PlayIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
+                                                                </Style>
+                                                            </Image.Style>
+                                                        </Image>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style.Setters>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+						<TextBlock
+                            Grid.Column="1"
                             Text="{Binding Path=Title}"
                             Foreground="Black"
-                            HorizontalAlignment="Left"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{Binding Path=Artists}"
-                            Foreground="Black"
-                            HorizontalAlignment="Center"/>
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
                         <TextBlock
                             Grid.Column="2"
+                            Text="{Binding Path=Artists}"
+                            Foreground="Black"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="3"
                             Text="{Binding Path=Album}"
                             Foreground="Black"
-                            HorizontalAlignment="Center"/>
-                        <Button
-                            Grid.Column="3"
-                            Margin="10"
-                            Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
-                            CommandParameter="{Binding}">
-                            <Image>
-                                <Image.Style>
-                                    <Style TargetType="Image">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DataContext.IsCurrent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
-                                                <Setter Property="Source" Value="{Binding DataContext.PauseIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="Source" Value="{Binding DataContext.PlayIconUri, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                        </Button>
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
                         <TextBlock
                             x:Name="Id"
                             Visibility="Hidden"
-                            Text="{Binding Path=Id}"
-                            Foreground="Black"
-                            HorizontalAlignment="Center"/>
+                            Text="{Binding Path=Id}"/>
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
