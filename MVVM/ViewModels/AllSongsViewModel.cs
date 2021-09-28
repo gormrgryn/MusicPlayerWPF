@@ -11,20 +11,9 @@ using System.Windows.Input;
 namespace MusicPlayerWPF.MVVM.ViewModels
 {
     public class AllSongsViewModel : ObservableObject {
-        //
+        
         public string PlayIconUri { get; set; }
         public string PauseIconUri { get; set; }
-
-        private string text;
-        public string Text
-        {
-            get { return text; }
-            set
-            {
-                text = value;
-                OnPropertyChanged("Text");
-            }
-        }
         public AllSongsModel model { get; set; }
         
         private ObservableCollection<SongModel> allsongs;
@@ -48,16 +37,35 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     SongModel currentSong = model.CurrentSong;
                     SongModel newCurrentSong = o as SongModel;
 
-                    if (currentSong != default(SongModel))
+                    if (currentSong != default(SongModel)) // != null
                     {
-                        currentSong.IsCurrent = false;
-                        currentSong.Stop();
+                        if (currentSong.Id == newCurrentSong.Id) // same
+                        {
+                            if (currentSong.IsCurrent) // isplaying
+                            {
+                                currentSong.Pause();
+                                currentSong.IsCurrent = false;
+                            }
+                            else
+                            {
+                                currentSong.Play();
+                                currentSong.IsCurrent = true;
+                            }
+                        } else // non same
+                        {
+                            currentSong.IsCurrent = false;
+                            currentSong.Stop();
+                            model.CurrentSong = newCurrentSong;
+                            newCurrentSong.IsCurrent = true;
+                            newCurrentSong.Play();
+                        }
+                        
+                    } else // == null
+                    {    
+                        model.CurrentSong = newCurrentSong;
+                        newCurrentSong.IsCurrent = true;
+                        newCurrentSong.Play();
                     }
-                    model.CurrentSong = newCurrentSong;
-                    newCurrentSong.IsCurrent = true;
-                    newCurrentSong.Play();
-
-                    Text = currentSong?.Title ?? "no";
                 }));
             }
         }

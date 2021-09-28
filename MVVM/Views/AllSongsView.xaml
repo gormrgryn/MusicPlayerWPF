@@ -75,7 +75,7 @@
                         </Button>
                         <TextBlock
                             x:Name="Id"
-                            Visibility="Visible"
+                            Visibility="Hidden"
                             Text="{Binding Path=Id}"
                             Foreground="Black"
                             HorizontalAlignment="Center"/>
