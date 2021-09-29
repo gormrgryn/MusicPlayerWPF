@@ -88,7 +88,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 for (var i = 0; i < filesPaths.Length; i++)
                 {
                     SongModel song = new SongModel(filesPaths[i]);
-                    song.Id = i;
+                    song.Id = i + 1;
                     model.AllSongs.AddLast(song);
                     AllSongs.Add(song);
                 }

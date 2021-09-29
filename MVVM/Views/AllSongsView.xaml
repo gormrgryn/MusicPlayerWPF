@@ -9,17 +9,16 @@
 >
     <StackPanel
         Background="Transparent">
-        <TextBlock
-            Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Foreground="Black"
-            HorizontalAlignment="Center"/>
         <ListBox
             Background="Transparent"
             BorderThickness="0"
             x:Name="AllSongsList"
             ItemsSource="{Binding AllSongs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             HorizontalContentAlignment="Stretch"
-            SelectedItem="{Binding SelectedItem}">
+            SelectedItem="{Binding SelectedItem}"
+            Height="450"
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            ScrollViewer.CanContentScroll="False">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Height" Value="50"/>
@@ -36,13 +35,52 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="*"/>
 						</Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
 							<RowDefinition/>
+                            <RowDefinition/>
 						</Grid.RowDefinitions>
-                        <Button
+                        <TextBlock
                             Grid.Column="0"
-                            Margin="5"
+                            Grid.RowSpan="2"
+                            Text="{Binding Path=Id}"
+                            Foreground="Black"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="16"/>
+						<TextBlock
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Text="{Binding Path=Title}"
+                            Foreground="Black"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Text="{Binding Path=Artists}"
+                            Foreground="Black"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="2"
+                            Grid.Row="1"
+                            Text="{Binding Path=Album}"
+                            Foreground="Black"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Column="3"
+                            Grid.RowSpan="2"
+                            Text="{Binding Path=Duration}"
+                            Foreground="Black"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                        <Button
+                            Grid.Column="4"
+                            Grid.RowSpan="2"
+                            Margin="10"
                             Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
                             CommandParameter="{Binding}"
                             VerticalAlignment="Center"
@@ -81,28 +119,6 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-						<TextBlock
-                            Grid.Column="1"
-                            Text="{Binding Path=Title}"
-                            Foreground="Black"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="2"
-                            Text="{Binding Path=Artists}"
-                            Foreground="Black"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="3"
-                            Text="{Binding Path=Album}"
-                            Foreground="Black"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            x:Name="Id"
-                            Visibility="Hidden"
-                            Text="{Binding Path=Id}"/>
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

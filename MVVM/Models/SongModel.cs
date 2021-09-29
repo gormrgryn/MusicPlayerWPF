@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Media;
 using MusicPlayerWPF.Core;
 
@@ -10,6 +11,8 @@ namespace MusicPlayerWPF.MVVM.Models
         public string Title { get; set; }
         public string Artists { get; set; }
         public string Album { get; set; }
+        public TimeSpan NaturalDuration { get; set; }
+        public string Duration { get; set; }
         public int Id { get; set; }
         private bool isCurrent;
         public bool IsCurrent
@@ -36,6 +39,10 @@ namespace MusicPlayerWPF.MVVM.Models
             Title = songFile.Tag.Title;
             Artists = string.Join(",", songFile.Tag.Performers);
             Album = songFile.Tag.Album;
+            NaturalDuration = songFile.Properties.Duration;
+            Duration = NaturalDuration.Seconds.ToString().Length == 1
+                ? NaturalDuration.Minutes.ToString() + ":0" + NaturalDuration.Seconds.ToString()
+                : NaturalDuration.Minutes.ToString() + ":" + NaturalDuration.Seconds.ToString();
         }
         public void Play()
         {
