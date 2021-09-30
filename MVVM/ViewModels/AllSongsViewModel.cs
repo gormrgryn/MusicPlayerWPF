@@ -14,8 +14,22 @@ namespace MusicPlayerWPF.MVVM.ViewModels
         
         public string PlayIconUri { get; set; }
         public string PauseIconUri { get; set; }
+        public string SkipNextIcon { get; set; }
+        public string SkipPreviousIcon { get; set; }
+
         public AllSongsModel model { get; set; }
-        
+
+        private SongModel currentSong;
+        public SongModel CurrentSong
+        {
+            get { return currentSong; }
+            set
+            {
+                currentSong = value;
+                OnPropertyChanged("CurrentSong");
+            }
+        }
+
         private ObservableCollection<SongModel> allsongs;
         public ObservableCollection<SongModel> AllSongs
         {
@@ -34,28 +48,29 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             {
                 return playSongCommand ?? (playSongCommand = new RelayCommand(o =>
                 {
-                    SongModel currentSong = model.CurrentSong;
+                    SongModel modelCurrentSong = model.CurrentSong;
                     SongModel newCurrentSong = o as SongModel;
 
-                    if (currentSong != default(SongModel)) // != null
+                    if (modelCurrentSong != default(SongModel)) // != null
                     {
-                        if (currentSong.Id == newCurrentSong.Id) // same
+                        if (modelCurrentSong.Id == newCurrentSong.Id) // same
                         {
-                            if (currentSong.IsCurrent) // isplaying
+                            if (modelCurrentSong.IsCurrent) // isplaying
                             {
-                                currentSong.Pause();
-                                currentSong.IsCurrent = false;
+                                modelCurrentSong.Pause();
+                                modelCurrentSong.IsCurrent = false;
                             }
                             else
                             {
-                                currentSong.Play();
-                                currentSong.IsCurrent = true;
+                                modelCurrentSong.Play();
+                                modelCurrentSong.IsCurrent = true;
                             }
                         } else // non same
                         {
-                            currentSong.IsCurrent = false;
-                            currentSong.Stop();
+                            modelCurrentSong.IsCurrent = false;
+                            modelCurrentSong.Stop();
                             model.CurrentSong = newCurrentSong;
+                            CurrentSong = newCurrentSong;
                             newCurrentSong.IsCurrent = true;
                             newCurrentSong.Play();
                         }
@@ -63,6 +78,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     } else // == null
                     {    
                         model.CurrentSong = newCurrentSong;
+                        CurrentSong = newCurrentSong;
                         newCurrentSong.IsCurrent = true;
                         newCurrentSong.Play();
                     }
@@ -93,6 +109,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     AllSongs.Add(song);
                 }
             }
+
             PlayIconUri = Directory.GetFiles(Directory.GetDirectories
             (
                 Directory.GetDirectories
@@ -100,7 +117,6 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     Directory.GetCurrentDirectory()
                 )[1]
             )[1])[1];
-
             PauseIconUri = Directory.GetFiles(Directory.GetDirectories
             (
                 Directory.GetDirectories
@@ -108,6 +124,20 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     Directory.GetCurrentDirectory()
                 )[1]
             )[1])[0];
+            SkipNextIcon = Directory.GetFiles(Directory.GetDirectories
+            (
+                Directory.GetDirectories
+                (
+                    Directory.GetCurrentDirectory()
+                )[1]
+            )[1])[2];
+            SkipPreviousIcon = Directory.GetFiles(Directory.GetDirectories
+            (
+                Directory.GetDirectories
+                (
+                    Directory.GetCurrentDirectory()
+                )[1]
+            )[1])[3];
         }
     }
 }

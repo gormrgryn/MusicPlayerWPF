@@ -123,5 +123,123 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
         </ListBox>
+        <Grid
+            Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Button
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Background="White"
+                BorderThickness="0"
+                BorderBrush="Transparent"
+                Grid.Column="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Setters>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Grid
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch">
+                                            <Image
+                                                Height="30"
+                                                Width="30">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="{Binding SkipPreviousIcon}"/>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style.Setters>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Background="White"
+                BorderThickness="0"
+                BorderBrush="Transparent"
+                Grid.Column="1">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Setters>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Grid
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch">
+                                            <Image
+                                                Height="30"
+                                                Width="30">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="{Binding PlayIconUri}"/>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style.Setters>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Background="White"
+                BorderThickness="0"
+                BorderBrush="Transparent"
+                Grid.Column="2">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Setters>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Grid
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch">
+                                            <Image
+                                                Height="30"
+                                                Width="30">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="{Binding SkipNextIcon}"/>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style.Setters>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Slider
+                Grid.Column="3"
+                Minimum="0"
+                Maximum="{Binding CurrentSong.NaturalDuration}"
+                Value="{Binding CurrentSong.NaturalPosition}"/>
+        </Grid>
     </StackPanel>
 </UserControl>
