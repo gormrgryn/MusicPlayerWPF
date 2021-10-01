@@ -26,6 +26,8 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             set
             {
                 currentSong = value;
+                currentSong.Player.MediaEnded -= new EventHandler(NextSong);
+                currentSong.Player.MediaEnded += new EventHandler(NextSong);
                 OnPropertyChanged("CurrentSong");
             }
         }
@@ -138,6 +140,20 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     Directory.GetCurrentDirectory()
                 )[1]
             )[1])[3];
+        }
+
+        private void NextSong(object sender, EventArgs e)
+        {
+            if (CurrentSong != default(SongModel))
+            {
+                CurrentSong.IsCurrent = false;
+                CurrentSong.Stop();
+                SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Next.Value;
+                newCurrentSong.IsCurrent = true;
+                CurrentSong = newCurrentSong;
+                model.CurrentSong = CurrentSong;
+                CurrentSong.Play();
+            }
         }
     }
 }

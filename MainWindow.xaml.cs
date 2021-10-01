@@ -29,7 +29,7 @@ namespace MusicPlayerWPF
             }
             catch(Exception ex)
             {
-                MessageBox.Show("A handled exception just occurred: " + ex.Message, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("A handled exception just occurred: " + ex.Data, "Exception Sample", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }
