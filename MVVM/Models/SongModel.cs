@@ -15,6 +15,7 @@ namespace MusicPlayerWPF.MVVM.Models
 
         public int NaturalDuration { get; set; }
         public string Duration { get; set; }
+        
         private int naturalPosition;
         public int NaturalPosition
         {

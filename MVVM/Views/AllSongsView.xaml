@@ -239,7 +239,9 @@
                 Grid.Column="3"
                 Minimum="0"
                 Maximum="{Binding CurrentSong.NaturalDuration}"
-                Value="{Binding CurrentSong.NaturalPosition}"/>
+                Value="{Binding CurrentSong.NaturalPosition}"
+                Thumb.DragCompleted="Slider_DragCompleted"
+                x:Name="SongSlider"/>
         </Grid>
     </StackPanel>
 </UserControl>
