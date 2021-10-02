@@ -241,6 +241,7 @@
                 Maximum="{Binding CurrentSong.NaturalDuration}"
                 Value="{Binding CurrentSong.NaturalPosition}"
                 Thumb.DragCompleted="Slider_DragCompleted"
+                IsMoveToPointEnabled="True"
                 x:Name="SongSlider"/>
         </Grid>
     </StackPanel>
