@@ -22,7 +22,10 @@ namespace MusicPlayerWPF.MVVM.ViewModels
         private SongModel currentSong;
         public SongModel CurrentSong
         {
-            get { return currentSong; }
+            get
+            {
+                return currentSong ?? default(SongModel);
+            }
             set
             {
                 currentSong = value;
@@ -43,17 +46,17 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             }
         }
 
-        private RelayCommand playSongCommand;
-        public RelayCommand PlaySongCommand
+        private RelayCommand playCommand;
+        public RelayCommand PlayCommand
         {
             get
             {
-                return playSongCommand ?? (playSongCommand = new RelayCommand(o =>
+                return playCommand ?? (playCommand = new RelayCommand(o =>
                 {
                     SongModel modelCurrentSong = model.CurrentSong;
                     SongModel newCurrentSong = o as SongModel;
 
-                    if (modelCurrentSong != default(SongModel)) // != null
+                    if (modelCurrentSong != default(SongModel))
                     {
                         if (modelCurrentSong.Id == newCurrentSong.Id) // same
                         {
@@ -77,12 +80,69 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                             newCurrentSong.Play();
                         }
                         
-                    } else // == null
-                    {    
-                        model.CurrentSong = newCurrentSong;
-                        CurrentSong = newCurrentSong;
-                        newCurrentSong.IsCurrent = true;
-                        newCurrentSong.Play();
+                    } else
+                    {
+                        if (newCurrentSong == default(SongModel))
+                        {
+                            SongModel songToPlay = model.AllSongs.First.Value;
+                            model.CurrentSong = songToPlay;
+                            CurrentSong = songToPlay;
+                            songToPlay.IsCurrent = true;
+                            songToPlay.Play();
+                        } else
+                        {
+                            model.CurrentSong = newCurrentSong;
+                            CurrentSong = newCurrentSong;
+                            newCurrentSong.IsCurrent = true;
+                            newCurrentSong.Play();
+                        }
+                    }
+                }));
+            }
+        }
+
+        private RelayCommand skipPreviousCommand;
+        public RelayCommand SkipPreviousCommand
+        {
+            get
+            {
+                return skipPreviousCommand ?? (skipPreviousCommand = new RelayCommand(o =>
+                {
+                    if (CurrentSong != default(SongModel))
+                    {
+                        SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Previous?.Value;
+                        if (newCurrentSong != null)
+                        {
+                            CurrentSong.IsCurrent = false;
+                            CurrentSong.Stop();
+                            newCurrentSong.IsCurrent = true;
+                            CurrentSong = newCurrentSong;
+                            model.CurrentSong = CurrentSong;
+                            CurrentSong.Play();
+                        }
+                    }
+                }));
+            }
+        }
+        private RelayCommand skipNextCommand;
+        public RelayCommand SkipNextCommand
+        {
+            get
+            {
+                return skipNextCommand ?? (skipNextCommand = new RelayCommand(o =>
+                {
+                    if (CurrentSong != default(SongModel))
+                    {
+                        SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Next?.Value;
+                        if (newCurrentSong != null)
+                        {
+                            CurrentSong.IsCurrent = false;
+                            CurrentSong.Stop();
+                            newCurrentSong.IsCurrent = true;
+                            CurrentSong = newCurrentSong;
+                            model.CurrentSong = CurrentSong;
+                            CurrentSong.Play();
+                        }
                     }
                 }));
             }
