@@ -58,9 +58,9 @@ namespace MusicPlayerWPF.MVVM.ViewModels
 
                     if (modelCurrentSong != default(SongModel))
                     {
-                        if (modelCurrentSong.Id == newCurrentSong.Id) // same
+                        if (modelCurrentSong.Id == newCurrentSong.Id)
                         {
-                            if (modelCurrentSong.IsCurrent) // isplaying
+                            if (modelCurrentSong.IsCurrent)
                             {
                                 modelCurrentSong.Pause();
                                 modelCurrentSong.IsCurrent = false;
@@ -70,32 +70,17 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                                 modelCurrentSong.Play();
                                 modelCurrentSong.IsCurrent = true;
                             }
-                        } else // non same
+                        } else
                         {
-                            modelCurrentSong.IsCurrent = false;
-                            modelCurrentSong.Stop();
-                            model.CurrentSong = newCurrentSong;
-                            CurrentSong = newCurrentSong;
-                            newCurrentSong.IsCurrent = true;
-                            newCurrentSong.Play();
+                            SwapSong(ref newCurrentSong);
                         }
                         
                     } else
                     {
-                        if (newCurrentSong == default(SongModel))
-                        {
-                            SongModel songToPlay = model.AllSongs.First.Value;
-                            model.CurrentSong = songToPlay;
-                            CurrentSong = songToPlay;
-                            songToPlay.IsCurrent = true;
-                            songToPlay.Play();
-                        } else
-                        {
-                            model.CurrentSong = newCurrentSong;
-                            CurrentSong = newCurrentSong;
-                            newCurrentSong.IsCurrent = true;
-                            newCurrentSong.Play();
-                        }
+                        SongModel songToPlay = newCurrentSong == default(SongModel)
+                            ? model.AllSongs.First.Value
+                            : newCurrentSong;
+                        SwapSong(ref songToPlay);
                     }
                 }));
             }
@@ -108,19 +93,8 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             {
                 return skipPreviousCommand ?? (skipPreviousCommand = new RelayCommand(o =>
                 {
-                    if (CurrentSong != default(SongModel))
-                    {
-                        SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Previous?.Value;
-                        if (newCurrentSong != null)
-                        {
-                            CurrentSong.IsCurrent = false;
-                            CurrentSong.Stop();
-                            newCurrentSong.IsCurrent = true;
-                            CurrentSong = newCurrentSong;
-                            model.CurrentSong = CurrentSong;
-                            CurrentSong.Play();
-                        }
-                    }
+                    SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Previous?.Value;
+                    if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
                 }));
             }
         }
@@ -131,19 +105,8 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             {
                 return skipNextCommand ?? (skipNextCommand = new RelayCommand(o =>
                 {
-                    if (CurrentSong != default(SongModel))
-                    {
-                        SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Next?.Value;
-                        if (newCurrentSong != null)
-                        {
-                            CurrentSong.IsCurrent = false;
-                            CurrentSong.Stop();
-                            newCurrentSong.IsCurrent = true;
-                            CurrentSong = newCurrentSong;
-                            model.CurrentSong = CurrentSong;
-                            CurrentSong.Play();
-                        }
-                    }
+                    SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Next?.Value;
+                    if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
                 }));
             }
         }
@@ -204,16 +167,20 @@ namespace MusicPlayerWPF.MVVM.ViewModels
 
         private void NextSong(object sender, EventArgs e)
         {
+            SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Next.Value;
+            SwapSong(ref newCurrentSong);
+        }
+        private void SwapSong(ref SongModel newCurrentSong)
+        {
             if (CurrentSong != default(SongModel))
             {
                 CurrentSong.IsCurrent = false;
                 CurrentSong.Stop();
-                SongModel newCurrentSong = model.AllSongs.Find(CurrentSong).Next.Value;
-                newCurrentSong.IsCurrent = true;
-                CurrentSong = newCurrentSong;
-                model.CurrentSong = CurrentSong;
-                CurrentSong.Play();
             }
+            newCurrentSong.IsCurrent = true;
+            CurrentSong = newCurrentSong;
+            model.CurrentSong = CurrentSong;
+            CurrentSong.Play();
         }
     }
 }
