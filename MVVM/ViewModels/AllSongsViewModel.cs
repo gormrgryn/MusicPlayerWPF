@@ -135,34 +135,10 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 }
             }
 
-            PlayIconUri = Directory.GetFiles(Directory.GetDirectories
-            (
-                Directory.GetDirectories
-                (
-                    Directory.GetCurrentDirectory()
-                )[1]
-            )[1])[1];
-            PauseIconUri = Directory.GetFiles(Directory.GetDirectories
-            (
-                Directory.GetDirectories
-                (
-                    Directory.GetCurrentDirectory()
-                )[1]
-            )[1])[0];
-            SkipNextIcon = Directory.GetFiles(Directory.GetDirectories
-            (
-                Directory.GetDirectories
-                (
-                    Directory.GetCurrentDirectory()
-                )[1]
-            )[1])[2];
-            SkipPreviousIcon = Directory.GetFiles(Directory.GetDirectories
-            (
-                Directory.GetDirectories
-                (
-                    Directory.GetCurrentDirectory()
-                )[1]
-            )[1])[3];
+            PlayIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[1];
+            PauseIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[0];
+            SkipNextIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[2];
+            SkipPreviousIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[3];
         }
 
         private void NextSong(object sender, EventArgs e)
