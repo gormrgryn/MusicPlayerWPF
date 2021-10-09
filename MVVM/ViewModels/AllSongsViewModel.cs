@@ -132,8 +132,11 @@ namespace MusicPlayerWPF.MVVM.ViewModels
 
         public ICommand PlayCommand { get; private set; }
 
+        private GeniusClient geniusClient;
+
         public AllSongsViewModel()
         {
+            geniusClient = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
             PlayCommand = new AsyncRelayCommand(PlayAction, ex => CurrentSong.CoverArtUrl = ex.Message);
 
             model = new AllSongsModel();
@@ -195,15 +198,11 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 SwapSong(ref songToPlay);
             }
 
-            if(CurrentSong != default(SongModel) && CurrentSong.CoverArtUrl == null)
+            if (string.IsNullOrEmpty(CurrentSong.CoverArtUrl))
             {
-                await GetSongCoverArt(CurrentSong);
+                var searchResponse = await geniusClient.SearchClient.Search($"{CurrentSong.Artists} {CurrentSong.Title}");
+                CurrentSong.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageThumbnailUrl;
             }
-            
-            CurrentSong.CoverArtUrl = "Fetching . . .";
-            var client = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
-            var searchResponse = await client.SearchClient.Search($"{CurrentSong.Artists} {CurrentSong.Title}");
-            CurrentSong.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageUrl;
         }
 
         private void NextSong(object sender, EventArgs e)
@@ -222,13 +221,6 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             CurrentSong = newCurrentSong;
             model.CurrentSong = CurrentSong;
             CurrentSong.Play();
-        }
-        private async Task GetSongCoverArt(SongModel song)
-        {
-            var client = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
-            var search = await client.SearchClient.Search($"{song.Artists} {song.Title}");
-            var firstResponse = search.Response.Hits.First().Result.SongArtImageUrl;
-            CurrentSong = song;
         }
     }
 }

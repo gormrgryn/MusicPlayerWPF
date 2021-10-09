@@ -24,59 +24,78 @@
                 <ColumnDefinition Width="200" />
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="75" />
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock
-                Text="Music Player"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
-                Margin="20, 0, 0, 0"
-                Foreground="White"
-                FontSize="20"
-            />
-            <StackPanel Grid.Row="1">
-                <RadioButton
-                    Content="All Songs"
-                    Height="50"
+
+            <StackPanel Grid.Column="0">
+                <TextBlock
+                    Text="Music Player"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="20, 20, 0, 0"
                     Foreground="White"
-                    FontSize="14"
-                    Style="{StaticResource MenuButtonTheme}"
-                    IsChecked="True"
-                    Command="{Binding AllSongsViewCommand}"
+                    FontSize="20"
+                    Height="75"
                 />
-                <RadioButton
-                    Content="Albums"
-                    Height="50"
-                    Foreground="White"
-                    FontSize="14"
-                    Style="{StaticResource MenuButtonTheme}"
-                    Command="{Binding AlbumsViewCommand}"
-                />
-                <RadioButton
-                    Content="Playlists"
-                    Height="50"
-                    Foreground="White"
-                    FontSize="14"
-                    Style="{StaticResource MenuButtonTheme}"
-                />
+                <StackPanel>
+                    <RadioButton
+                        Content="All Songs"
+                        Height="50"
+                        Foreground="White"
+                        FontSize="14"
+                        Style="{StaticResource MenuButtonTheme}"
+                        IsChecked="True"
+                        Command="{Binding AllSongsViewCommand}"
+                    />
+                    <RadioButton
+                        Content="Albums"
+                        Height="50"
+                        Foreground="White"
+                        FontSize="14"
+                        Style="{StaticResource MenuButtonTheme}"
+                        Command="{Binding AlbumsViewCommand}"
+                    />
+                    <RadioButton
+                        Content="Playlists"
+                        Height="50"
+                        Foreground="White"
+                        FontSize="14"
+                        Style="{StaticResource MenuButtonTheme}"
+                    />
+                </StackPanel>
             </StackPanel>
-            <TextBox
-                Width="250"
-                Height="40"
-                VerticalContentAlignment="Center"
-                HorizontalAlignment="Left"
-                Margin="5"
+
+            <Grid
+                Height="620"
                 Grid.Column="1"
-                Style="{StaticResource SearchBarTheme}"
-            />
-            <ContentControl
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="10"
-                Content="{Binding CurrentView}"
-            />
+                ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image
+                    Grid.Row="0"
+                    Grid.RowSpan="2" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Source="{Binding CurrentView.CurrentSong.CoverArtUrl}"
+                    Width="700"
+                    Height="700">
+                    <Image.Effect>
+                        <BlurEffect Radius="400"/>
+                    </Image.Effect>
+                </Image>
+                <TextBox
+                    Grid.Row="0"
+                    Width="250"
+                    VerticalContentAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Margin="0, 10, 0, 0"
+                    Style="{StaticResource SearchBarTheme}"
+                />
+                <ContentControl
+                    Grid.Row="1"
+                    Content="{Binding CurrentView}"
+                />
+            </Grid>
         </Grid>
     </Border>
 </Window>
