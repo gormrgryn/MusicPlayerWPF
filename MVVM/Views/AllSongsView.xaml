@@ -4,10 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Local="clr-namespace:MusicPlayerWPF.MVVM.Views"
+    xmlns:local="clr-namespace:MusicPlayerWPF.MVVM.Views"
+    xmlns:converters="clr-namespace:MusicPlayerWPF.Assets.Converters"
     mc:Ignorable="d"
 >
     <UserControl.Resources>
+        <converters:ImageConverter x:Key="ImageConverter" />
+
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -21,7 +24,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -33,7 +35,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <Style x:Key="SliderThumb" TargetType="Thumb">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -45,7 +46,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <ControlTemplate x:Key="Slider"  TargetType="Slider">
             <Grid>
                 <Grid.RowDefinitions>
@@ -66,7 +66,6 @@
                 </Track>
             </Grid>            
         </ControlTemplate>
-
         <Style x:Key="Horizontal_Slider" TargetType="Slider">
             <Setter Property="Focusable" Value="False"/>
             <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -80,8 +79,11 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
+
     <StackPanel
         Background="Transparent">
+        <!-- <Image Source="{Binding CurrentSong.CoverArtUrl, Converter={StaticResource ImageConverter}}" Width="30" Height="30"/> -->
+        <TextBlock Foreground="Black" Background="Transparent" Text="{Binding CurrentSong.CoverArtUrl}" />
         <ListBox
             Background="Transparent"
             BorderThickness="0"

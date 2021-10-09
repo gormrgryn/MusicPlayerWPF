@@ -13,6 +13,17 @@ namespace MusicPlayerWPF.MVVM.Models
         public string Artists { get; set; }
         public string Album { get; set; }
 
+        private string coverArtUrl;
+        public string CoverArtUrl
+        {
+            get { return coverArtUrl; }
+            set
+            {
+                coverArtUrl = value;
+                OnPropertyChanged("CoverArtUrl");
+            }
+        }
+
         public int NaturalDuration { get; set; }
         public string Duration { get; set; }
         

@@ -1,12 +1,16 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using MusicPlayerWPF.Core;
-using MusicPlayerWPF.MVVM.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Threading.Tasks;
+using MusicPlayerWPF.Core;
+using MusicPlayerWPF.Core.AsyncCommands;
+using MusicPlayerWPF.MVVM.Models;
+using Genius;
 
 namespace MusicPlayerWPF.MVVM.ViewModels
 {
@@ -46,73 +50,92 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             }
         }
 
-        private RelayCommand playCommand;
-        public RelayCommand PlayCommand
-        {
-            get
-            {
-                return playCommand ?? (playCommand = new RelayCommand(o =>
-                {
-                    SongModel modelCurrentSong = model.CurrentSong;
-                    SongModel newCurrentSong = o as SongModel;
+        // private RelayCommand playCommand;
+        // public RelayCommand PlayCommand
+        // {
+        //     get
+        //     {
+        //         return playCommand ?? (playCommand = new RelayCommand(o =>
+        //         {
+        //             SongModel newCurrentSong = o as SongModel;
 
-                    if (modelCurrentSong != default(SongModel))
-                    {
-                        if (modelCurrentSong.Id == newCurrentSong.Id)
-                        {
-                            if (modelCurrentSong.IsCurrent)
-                            {
-                                modelCurrentSong.Pause();
-                                modelCurrentSong.IsCurrent = false;
-                            }
-                            else
-                            {
-                                modelCurrentSong.Play();
-                                modelCurrentSong.IsCurrent = true;
-                            }
-                        } else
-                        {
-                            SwapSong(ref newCurrentSong);
-                        }
+        //             if (CurrentSong != default(SongModel))
+        //             {
+        //                 if (CurrentSong.Id == newCurrentSong.Id)
+        //                 {
+        //                     if (CurrentSong.IsCurrent)
+        //                     {
+        //                         CurrentSong.Pause();
+        //                         CurrentSong.IsCurrent = false;
+        //                     }
+        //                     else
+        //                     {
+        //                         CurrentSong.Play();
+        //                         CurrentSong.IsCurrent = true;
+        //                     }
+        //                 } else
+        //                 {
+        //                     SwapSong(ref newCurrentSong);
+        //                 }
                         
-                    } else
-                    {
-                        SongModel songToPlay = newCurrentSong == default(SongModel)
-                            ? model.AllSongs.First.Value
-                            : newCurrentSong;
-                        SwapSong(ref songToPlay);
-                    }
-                }));
-            }
-        }
+        //             } else
+        //             {
+        //                 SongModel songToPlay = newCurrentSong == default(SongModel)
+        //                     ? model.AllSongs.First.Value
+        //                     : newCurrentSong;
+        //                 SwapSong(ref songToPlay);
+        //             }
 
-        private RelayCommand skipPreviousCommand;
-        public RelayCommand SkipPreviousCommand
-        {
-            get
-            {
-                return skipPreviousCommand ?? (skipPreviousCommand = new RelayCommand(o =>
-                {
-                    SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Previous?.Value;
-                    if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
-                }));
-            }
-        }
-        private RelayCommand skipNextCommand;
-        public RelayCommand SkipNextCommand
-        {
-            get
-            {
-                return skipNextCommand ?? (skipNextCommand = new RelayCommand(o =>
-                {
-                    SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Next?.Value;
-                    if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
-                }));
-            }
-        }
+        //             if(CurrentSong != default(SongModel) && CurrentSong.CoverArtUrl == null)
+        //             {
+        //                 await GetSongCoverArt(CurrentSong);
+        //             }
+        //         }));
+        //     }
+        // }
+
+        // private RelayCommand skipPreviousCommand;
+        // public RelayCommand SkipPreviousCommand
+        // {
+        //     get
+        //     {
+        //         return skipPreviousCommand ?? (skipPreviousCommand = new RelayCommand(async o =>
+        //         {
+        //             SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Previous?.Value;
+        //             if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
+
+        //             if(CurrentSong.CoverArtUrl == null)
+        //             {
+        //                 await GetSongCoverArt(CurrentSong);
+        //             }
+        //         }));
+        //     }
+        // }
+
+        // private RelayCommand skipNextCommand;
+        // public RelayCommand SkipNextCommand
+        // {
+        //     get
+        //     {
+        //         return skipNextCommand ?? (skipNextCommand = new RelayCommand(async o =>
+        //         {
+        //             SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Next?.Value;
+        //             if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
+
+        //             if(CurrentSong.CoverArtUrl == null)
+        //             {
+        //                 await GetSongCoverArt(CurrentSong);
+        //             }
+        //         }));
+        //     }
+        // }
+
+        public ICommand PlayCommand { get; private set; }
 
         public AllSongsViewModel()
         {
+            PlayCommand = new AsyncRelayCommand(PlayAction, ex => CurrentSong.CoverArtUrl = ex.Message);
+
             model = new AllSongsModel();
             AllSongs = new ObservableCollection<SongModel>();
             string dirName = Directory.GetDirectories
@@ -121,7 +144,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 (
                     Directory.GetCurrentDirectory()
                 )[1]
-            )[2];
+            )[3];
 
             if(Directory.Exists(dirName))
             {
@@ -135,10 +158,52 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 }
             }
 
-            PlayIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[1];
-            PauseIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[0];
-            SkipNextIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[2];
-            SkipPreviousIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[1])[3];
+            PlayIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[2])[1];
+            PauseIconUri = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[2])[0];
+            SkipNextIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[2])[2];
+            SkipPreviousIcon = Directory.GetFiles(Directory.GetDirectories(Directory.GetDirectories(Directory.GetCurrentDirectory())[1])[2])[3];
+        }
+
+        private async Task PlayAction(object o)
+        {
+            SongModel newCurrentSong = o as SongModel;
+
+            if (CurrentSong != default(SongModel))
+            {
+                if (CurrentSong.Id == newCurrentSong.Id)
+                {
+                    if (CurrentSong.IsCurrent)
+                    {
+                        CurrentSong.Pause();
+                        CurrentSong.IsCurrent = false;
+                    }
+                    else
+                    {
+                        CurrentSong.Play();
+                        CurrentSong.IsCurrent = true;
+                    }
+                } else
+                {
+                    SwapSong(ref newCurrentSong);
+                }
+                
+            } else
+            {
+                SongModel songToPlay = newCurrentSong == default(SongModel)
+                    ? model.AllSongs.First.Value
+                    : newCurrentSong;
+                SwapSong(ref songToPlay);
+            }
+
+            if(CurrentSong != default(SongModel) && CurrentSong.CoverArtUrl == null)
+            {
+                await GetSongCoverArt(CurrentSong);
+            }
+            
+            CurrentSong.CoverArtUrl = "Fetching . . .";
+            var client = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
+            var searchResponse = await client.SearchClient.Search($"{CurrentSong.Artists} {CurrentSong.Title}");
+            CurrentSong.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageUrl;
         }
 
         private void NextSong(object sender, EventArgs e)
@@ -157,6 +222,13 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             CurrentSong = newCurrentSong;
             model.CurrentSong = CurrentSong;
             CurrentSong.Play();
+        }
+        private async Task GetSongCoverArt(SongModel song)
+        {
+            var client = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
+            var search = await client.SearchClient.Search($"{song.Artists} {song.Title}");
+            var firstResponse = search.Response.Hits.First().Result.SongArtImageUrl;
+            CurrentSong = song;
         }
     }
 }
