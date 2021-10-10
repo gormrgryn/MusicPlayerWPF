@@ -39,6 +39,20 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             }
         }
 
+        private string currentCover;
+        public string CurrentCover
+        {
+            get
+            {
+                return currentCover;
+            }
+            set
+            {
+                currentCover = value;
+                OnPropertyChanged("CurrentCover");
+            }
+        }
+
         private ObservableCollection<SongModel> allsongs;
         public ObservableCollection<SongModel> AllSongs
         {
@@ -49,51 +63,6 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 OnPropertyChanged("AllSongs");
             }
         }
-
-        // private RelayCommand playCommand;
-        // public RelayCommand PlayCommand
-        // {
-        //     get
-        //     {
-        //         return playCommand ?? (playCommand = new RelayCommand(o =>
-        //         {
-        //             SongModel newCurrentSong = o as SongModel;
-
-        //             if (CurrentSong != default(SongModel))
-        //             {
-        //                 if (CurrentSong.Id == newCurrentSong.Id)
-        //                 {
-        //                     if (CurrentSong.IsCurrent)
-        //                     {
-        //                         CurrentSong.Pause();
-        //                         CurrentSong.IsCurrent = false;
-        //                     }
-        //                     else
-        //                     {
-        //                         CurrentSong.Play();
-        //                         CurrentSong.IsCurrent = true;
-        //                     }
-        //                 } else
-        //                 {
-        //                     SwapSong(ref newCurrentSong);
-        //                 }
-                        
-        //             } else
-        //             {
-        //                 SongModel songToPlay = newCurrentSong == default(SongModel)
-        //                     ? model.AllSongs.First.Value
-        //                     : newCurrentSong;
-        //                 SwapSong(ref songToPlay);
-        //             }
-
-        //             if(CurrentSong != default(SongModel) && CurrentSong.CoverArtUrl == null)
-        //             {
-        //                 await GetSongCoverArt(CurrentSong);
-        //             }
-        //         }));
-        //     }
-        // }
-
         // private RelayCommand skipPreviousCommand;
         // public RelayCommand SkipPreviousCommand
         // {
@@ -203,6 +172,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 var searchResponse = await geniusClient.SearchClient.Search($"{CurrentSong.Artists} {CurrentSong.Title}");
                 CurrentSong.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageThumbnailUrl;
             }
+            CurrentCover = CurrentSong.CoverArtUrl;
         }
 
         private void NextSong(object sender, EventArgs e)

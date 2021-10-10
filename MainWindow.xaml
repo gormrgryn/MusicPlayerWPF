@@ -76,11 +76,11 @@
                     Grid.RowSpan="2" 
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Source="{Binding CurrentView.CurrentSong.CoverArtUrl}"
+                    Source="{Binding CurrentView.CurrentCover}"
                     Width="700"
                     Height="700">
                     <Image.Effect>
-                        <BlurEffect Radius="400"/>
+                        <BlurEffect Radius="50"/>
                     </Image.Effect>
                 </Image>
                 <TextBox
