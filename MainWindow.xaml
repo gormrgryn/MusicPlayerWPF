@@ -51,7 +51,6 @@
                         Foreground="White"
                         FontSize="14"
                         Style="{StaticResource MenuButtonTheme}"
-                        Command="{Binding AlbumsViewCommand}"
                     />
                     <RadioButton
                         Content="Playlists"

@@ -7,11 +7,7 @@ namespace MusicPlayerWPF.MVVM.ViewModels
     {
         public AllSongsViewModel AllSongsVM { get; set; }
 
-        public AlbumsViewModel AlbumsVM { get; set; }
-
         public RelayCommand AllSongsViewCommand { get; set; }
-
-        public RelayCommand AlbumsViewCommand { get; set; }
 
         private object _currentView;
 
@@ -26,16 +22,11 @@ namespace MusicPlayerWPF.MVVM.ViewModels
         public MainViewModel()
         {
             AllSongsVM = new AllSongsViewModel();
-            AlbumsVM = new AlbumsViewModel();
             CurrentView = AllSongsVM;
 
             AllSongsViewCommand = new RelayCommand(o =>
             {
                 CurrentView = AllSongsVM;
-            });
-            AlbumsViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = AlbumsVM;
             });
         }
     }

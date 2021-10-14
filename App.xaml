@@ -16,10 +16,6 @@
                 <view:AllSongsView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:AlbumsViewModel}">
-                <view:AlbumsView/>
-            </DataTemplate>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

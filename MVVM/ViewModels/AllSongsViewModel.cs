@@ -63,50 +63,34 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                 OnPropertyChanged("AllSongs");
             }
         }
-        // private RelayCommand skipPreviousCommand;
-        // public RelayCommand SkipPreviousCommand
-        // {
-        //     get
-        //     {
-        //         return skipPreviousCommand ?? (skipPreviousCommand = new RelayCommand(async o =>
-        //         {
-        //             SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Previous?.Value;
-        //             if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
 
-        //             if(CurrentSong.CoverArtUrl == null)
-        //             {
-        //                 await GetSongCoverArt(CurrentSong);
-        //             }
-        //         }));
-        //     }
-        // }
+        private bool areAllCoversLoaded
+        {
+            get
+            {
+                int length = 0;
 
-        // private RelayCommand skipNextCommand;
-        // public RelayCommand SkipNextCommand
-        // {
-        //     get
-        //     {
-        //         return skipNextCommand ?? (skipNextCommand = new RelayCommand(async o =>
-        //         {
-        //             SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Next?.Value;
-        //             if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
-
-        //             if(CurrentSong.CoverArtUrl == null)
-        //             {
-        //                 await GetSongCoverArt(CurrentSong);
-        //             }
-        //         }));
-        //     }
-        // }
+                foreach (var item in model.AllSongs)
+                {
+                    if (!string.IsNullOrEmpty(item.CoverArtUrl)) length++;
+                }
+                return length == model.AllSongs.Count;
+            }
+        }
 
         public ICommand PlayCommand { get; private set; }
+        public ICommand SkipNextCommand { get; private set; }
+        public ICommand SkipPreviousCommand { get; private set; }
 
         private GeniusClient geniusClient;
 
         public AllSongsViewModel()
         {
             geniusClient = new GeniusClient("rHeNwXXfSXsxQoQOsE6B89cQz-s4czDv37Sh-w2CgDgS6OmgyXw_QNYsgYkll2V2");
+            
             PlayCommand = new AsyncRelayCommand(PlayAction, ex => CurrentSong.CoverArtUrl = ex.Message);
+            SkipNextCommand = new AsyncRelayCommand(SkipNextAction, ex => CurrentSong.CoverArtUrl = ex.Message);
+            SkipPreviousCommand = new AsyncRelayCommand(SkipPreviousAction, ex => CurrentSong.CoverArtUrl = ex.Message);
 
             model = new AllSongsModel();
             AllSongs = new ObservableCollection<SongModel>();
@@ -166,13 +150,21 @@ namespace MusicPlayerWPF.MVVM.ViewModels
                     : newCurrentSong;
                 SwapSong(ref songToPlay);
             }
+            await GetAllSongCovers();
+        }
+        private async Task SkipNextAction(object o)
+        {
+            SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Next?.Value;
 
-            if (string.IsNullOrEmpty(CurrentSong.CoverArtUrl))
-            {
-                var searchResponse = await geniusClient.SearchClient.Search($"{CurrentSong.Artists} {CurrentSong.Title}");
-                CurrentSong.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageThumbnailUrl;
-            }
-            CurrentCover = CurrentSong.CoverArtUrl;
+            if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
+            await GetAllSongCovers();
+        }
+        private async Task SkipPreviousAction(object o)
+        {
+            SongModel newCurrentSong = model.AllSongs.Find(CurrentSong)?.Previous?.Value;
+
+            if (newCurrentSong != default(SongModel)) SwapSong(ref newCurrentSong);
+            await GetAllSongCovers();
         }
 
         private void NextSong(object sender, EventArgs e)
@@ -191,6 +183,18 @@ namespace MusicPlayerWPF.MVVM.ViewModels
             CurrentSong = newCurrentSong;
             model.CurrentSong = CurrentSong;
             CurrentSong.Play();
+            CurrentCover = CurrentSong.CoverArtUrl;
+        }
+        private async Task GetAllSongCovers()
+        {
+            if (areAllCoversLoaded) return;
+
+            foreach (var item in model.AllSongs)
+            {
+                var searchResponse = await geniusClient.SearchClient.Search($"{item.Artists} {item.Title}");
+                item.CoverArtUrl = searchResponse.Response.Hits.First().Result.SongArtImageThumbnailUrl;
+            }
+            CurrentCover = CurrentSong.CoverArtUrl;
         }
     }
 }
